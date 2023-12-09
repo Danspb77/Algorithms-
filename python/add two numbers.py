@@ -15,6 +15,5 @@ def addTwoNumbers( l1, l2):
     m.reverse()
     return m
 print(addTwoNumbers([2,4,3],[5,6,4]))
-addTwoNumbers([2,4,3],[5,6,4])
-for i in range(3):
-    print(i)
+
+
