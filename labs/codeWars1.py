@@ -25,17 +25,17 @@ print(two_sum_hash([1234, 5678, 9012], 14690))
 
 def valid_ISBN10(isbn):
     summa = 0
-    if len(isbn)==10:
+    if len(isbn) == 10:
         for i, char in enumerate(isbn):
 
             if char in "1234567890X":
 
-                if  char == "X":
-                    if i == len(isbn)-1 :
+                if char == "X":
+                    if i == len(isbn)-1:
                         implement = (i+1) * 10
                     else:
                         return False
-                    
+
                 else:
                     implement = (i+1) * int(char)
                 summa += implement
@@ -50,3 +50,32 @@ def valid_ISBN10(isbn):
 
 
 print(valid_ISBN10("47008252"))
+
+
+def is_solved(board):
+    for row in board:
+        if sum(row) == 3 and ('0' and '2') not in row:
+            return ("1 if X won,")
+
+        elif sum(row) == 6 and ('0' and '1') not in row:
+            return ("2 if O won,")
+        
+        else:
+            
+
+
+# not yet finished
+board = [[0, 0, 1],
+         [0, 1, 2],
+         [2, 1, 0]]
+
+# winning row
+boardX = [[1, 1, 1],
+          [0, 2, 2],
+          [0, 0, 0]]
+
+boardY = [[0, 1, 1],
+          [2, 2, 2],
+          [0, 0, 0]]
+
+print(is_solved(boardY))
