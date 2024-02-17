@@ -25,17 +25,28 @@ print(two_sum_hash([1234, 5678, 9012], 14690))
 
 def valid_ISBN10(isbn):
     summa = 0
-    for i, char in enumerate(isbn):
-        if i == len(isbn)-1 and isbn[i] == "X":
-            implement = (i+1) * 10
-        else:
-            implement = (i+1) * int(char)
-        summa += implement
+    if len(isbn)==10:
+        for i, char in enumerate(isbn):
 
-    expr = summa % 11
-    if expr == 0:
-        return True
-    return False
+            if char in "1234567890X":
+
+                if  char == "X":
+                    if i == len(isbn)-1 :
+                        implement = (i+1) * 10
+                    else:
+                        return False
+                    
+                else:
+                    implement = (i+1) * int(char)
+                summa += implement
+            else:
+                return False
+        expr = summa % 11
+        if expr == 0:
+            return True
+        return False
+    else:
+        return False
 
 
-print(valid_ISBN10("048665088X"))
+print(valid_ISBN10("47008252"))
