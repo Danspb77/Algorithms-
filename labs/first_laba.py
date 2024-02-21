@@ -120,3 +120,18 @@ def heapify_helper(arr, low, high, i):
 arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
 introsort(arr)
 print("Sorted array:", arr)
+
+
+
+def insertion_sort(arr):
+    N=len(arr)
+    for i in range(1,N):
+        for j in range (i,0,-1):
+            if arr[j]<arr[j-1]:
+                arr[j],arr[j-1]=arr[j-1],arr[j]
+            else:
+                break
+    return arr
+
+arr= [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+print(insertion_sort(arr))
