@@ -141,10 +141,11 @@ def heapify_helper(arr, low, high, i):
 try:
     with open('./file1.txt', "r") as file:
         arr = [int(num.strip(',')) for num in file.read().split()]
+        introsort(arr)
+        print("Sorted array:", arr)
 except:
     print("Что-то шло нее так. Проверьте путь к файлу и входные данные")
 
-print("Sorted array:", arr)
 
 
 # def insertion_sort(arr):
