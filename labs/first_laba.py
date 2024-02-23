@@ -44,6 +44,7 @@ print("Sorted array is:", arr)
 
 
 # arr: Исходный массив чисел, который требуется отсортировать.
+# N -длина массива arr
 # low: Индекс начала текущего подмассива.
 # high: Индекс конца текущего подмассива.
 # max_depth: Максимальная глубина рекурсии для алгоритма introsort.
@@ -57,12 +58,12 @@ print("Sorted array is:", arr)
 
 
 def introsort(arr):
-
+    N =len(arr)
     # определение максимальной глубины рекурсии
-    max_depth = 2 * int(math.log(len(arr), 2))
+    max_depth = 2 * int(math.log(N, 2))
 
     # Вызов вспомогательной функции с массивом, инициализирующей верхние и нижние индексы и максимальную глубину рекурсии
-    introsort_helper(arr, 0, len(arr) - 1, max_depth)
+    introsort_helper(arr, 0, N - 1, max_depth)
 
 
 def introsort_helper(arr, low, high, max_depth):
