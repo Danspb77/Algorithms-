@@ -43,9 +43,6 @@ heapSort(arr)
 print("Sorted array is:", arr)
 
 
-
-
-
 # arr: Исходный массив чисел, который требуется отсортировать.
 # low: Индекс начала текущего подмассива.
 # high: Индекс конца текущего подмассива.
@@ -59,32 +56,26 @@ print("Sorted array is:", arr)
 # largest: Индекс наибольшего элемента в куче.
 
 
-
-
-
 def introsort(arr):
-    
+
     # определение максимальной глубины рекурсии
     max_depth = 2 * int(math.log(len(arr), 2))
 
-    
     # Вызов вспомогательной функции с массивом, инициализирующей верхние и нижние индексы и максимальную глубину рекурсии
     introsort_helper(arr, 0, len(arr) - 1, max_depth)
 
 
 def introsort_helper(arr, low, high, max_depth):
-    
+
     # если длина массива меньше или равна 1, то он уже отсортирован
     if low >= high:
         return
 
-    
     # если глубина рекурсии превышает максимальную глубину, то переключаемся на heapsort
     if max_depth == 0:
         heapsort(arr, low, high)
         return
 
-    
     # иначе используем quicksort для разделения массива и сортировки каждой части рекурсивно
     pivot_index = partition(arr, low, high)
     introsort_helper(arr, low, pivot_index - 1, max_depth - 1)
@@ -92,46 +83,43 @@ def introsort_helper(arr, low, high, max_depth):
 
 
 def partition(arr, low, high):
-    
+
     # выбираем крайний элемент в качестве опорного
     pivot = arr[high]
     i = low - 1
 
-    
     # проход по массиву, перемещение элементов меньших чем опорный на левую сторону
     for j in range(low, high):
         if arr[j] <= pivot:
             i += 1
             arr[i], arr[j] = arr[j], arr[i]
 
-    
     # перемещение опорного элемента на правильную позицию
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
     return i + 1
 
 
 def heapsort(arr, low, high):
-    
+
     # Преобразуем массив в max heap
     heapify(arr, low, high)
 
-    
-     # Извлекаем элементы из кучи один за другим
+    # Извлекаем элементы из кучи один за другим
     for i in range(high, low - 1, -1):
         arr[i], arr[low] = arr[low], arr[i]
         heapify(arr, low, i - 1)
 
 
 def heapify(arr, low, high):
-    
-     # Построение max heap снизу вверх
-    
+
+    # Построение max heap снизу вверх
+
     for i in range(high // 2, low - 1, -1):
         heapify_helper(arr, low, high, i)
 
 
 def heapify_helper(arr, low, high, i):
-    
+
     # Поддержание свойства max heap путем рекурсивного обмена элементов
     left_child = 2 * i + 1
     right_child = 2 * i + 2
@@ -147,28 +135,26 @@ def heapify_helper(arr, low, high, i):
         heapify_helper(arr, low, high, largest)
 
 
-
 # Пример использования:
+
 arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+
+with open('./file1.txt', "r") as file:
+    arr = [int(num.strip(',')) for num in file.read().split()]
 introsort(arr)
 print("Sorted array:", arr)
 
 
-
-
-
-
-
-
 def insertion_sort(arr):
-    N=len(arr)
-    for i in range(1,N):
-        for j in range (i,0,-1):
-            if arr[j]<arr[j-1]:
-                arr[j],arr[j-1]=arr[j-1],arr[j]
+    N = len(arr)
+    for i in range(1, N):
+        for j in range(i, 0, -1):
+            if arr[j] < arr[j-1]:
+                arr[j], arr[j-1] = arr[j-1], arr[j]
             else:
                 break
     return arr
 
-arr= [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+
+arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
 print(insertion_sort(arr))
