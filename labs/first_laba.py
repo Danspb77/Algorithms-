@@ -37,10 +37,10 @@ def heapSort(arr):
         heapify(arr, i, 0)
 
 
-# Управляющий код для тестирования
-arr = [12, 11, 13, 5, 6, 7]
-heapSort(arr)
-print("Sorted array is:", arr)
+# # Управляющий код для тестирования
+# arr = [12, 11, 13, 5, 6, 7]
+# heapSort(arr)
+# print("Sorted array is:", arr)
 
 
 # arr: Исходный массив чисел, который требуется отсортировать.
@@ -138,24 +138,25 @@ def heapify_helper(arr, low, high, i):
 
 # Пример использования:
 
-arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+try:
+    with open('./file1.txt', "r") as file:
+        arr = [int(num.strip(',')) for num in file.read().split()]
+except:
+    print("Что-то шло нее так. Проверьте путь к файлу и входные данные")
 
-with open('./file1.txt', "r") as file:
-    arr = [int(num.strip(',')) for num in file.read().split()]
-introsort(arr)
 print("Sorted array:", arr)
 
 
-def insertion_sort(arr):
-    N = len(arr)
-    for i in range(1, N):
-        for j in range(i, 0, -1):
-            if arr[j] < arr[j-1]:
-                arr[j], arr[j-1] = arr[j-1], arr[j]
-            else:
-                break
-    return arr
+# def insertion_sort(arr):
+#     N = len(arr)
+#     for i in range(1, N):
+#         for j in range(i, 0, -1):
+#             if arr[j] < arr[j-1]:
+#                 arr[j], arr[j-1] = arr[j-1], arr[j]
+#             else:
+#                 break
+#     return arr
 
 
-arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
-print(insertion_sort(arr))
+# arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+# print(insertion_sort(arr))
