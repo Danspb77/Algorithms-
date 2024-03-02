@@ -52,30 +52,53 @@ def valid_ISBN10(isbn):
 print(valid_ISBN10("47008252"))
 
 
-def is_solved(board):
-    for row in board:
-        if sum(row) == 3 and ('0' and '2') not in row:
-            return ("1 if X won,")
+# def is_solved(board):
+#     for row in board:
+#         if sum(row) == 3 and ('0' and '2') not in row:
+#             return ("1 if X won,")
 
-        elif sum(row) == 6 and ('0' and '1') not in row:
-            return ("2 if O won,")
+#         elif sum(row) == 6 and ('0' and '1') not in row:
+#             return ("2 if O won,")
         
-        else:
+#         else:
             
 
 
-# not yet finished
-board = [[0, 0, 1],
-         [0, 1, 2],
-         [2, 1, 0]]
+# # not yet finished
+# board = [[0, 0, 1],
+#          [0, 1, 2],
+#          [2, 1, 0]]
 
-# winning row
-boardX = [[1, 1, 1],
-          [0, 2, 2],
-          [0, 0, 0]]
+# # winning row
+# boardX = [[1, 1, 1],
+#           [0, 2, 2],
+#           [0, 0, 0]]
 
-boardY = [[0, 1, 1],
-          [2, 2, 2],
-          [0, 0, 0]]
+# boardY = [[0, 1, 1],
+#           [2, 2, 2],
+#           [0, 0, 0]]
 
-print(is_solved(boardY))
+# print(is_solved(boardY))
+
+import psycopg2 as ps
+
+conn = ps.connect(
+    dbname='laba4',
+    user='postgres',
+    password='first@27',
+    host='localhost'
+)
+
+cur = conn.cursor()
+
+sql = "SELECT * FROM user1_schema.cars WHERE brand = %s"  # Adjust your SQL query as needed
+
+brand_value = 'BMW'
+cur.execute(sql, (brand_value,))  # Pass parameters as a tuple
+
+rows = cur.fetchall()
+for row in rows:
+    print(row)
+
+cur.close()
+conn.close()
