@@ -85,7 +85,7 @@ def introsort_helper(arr, low, high, max_depth):
 
 def partition(arr, low, high):
 
-    # выбираем крайний элемент в качестве опорного
+    # выбираем крайний правый элемент в качестве опорного
     pivot = arr[high]
     i = low - 1
 
