@@ -76,7 +76,7 @@ def introsort_helper(arr, low, high, max_depth):
     if max_depth == 0:
         heapsort(arr, low, high)
         return
-
+    print(arr)
     # иначе используем quicksort для разделения массива и сортировки каждой части рекурсивно
     pivot_index = partition(arr, low, high)
     introsort_helper(arr, low, pivot_index - 1, max_depth - 1)
@@ -94,6 +94,7 @@ def partition(arr, low, high):
         if arr[j] <= pivot:
             i += 1
             arr[i], arr[j] = arr[j], arr[i]
+            # print(f'partition sort: i={i}, j={j}, pivot={pivot}, arr={arr}')
 
     # перемещение опорного элемента на правильную позицию
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
@@ -108,6 +109,7 @@ def heapsort(arr, low, high):
     # Извлекаем элементы из кучи один за другим
     for i in range(high, low - 1, -1):
         arr[i], arr[low] = arr[low], arr[i]
+        # print(f"heapsort: i={i}, low={low}, high= {high}, arr={arr}")
         heapify(arr, low, i - 1)
 
 
@@ -146,6 +148,15 @@ try:
 except:
     print("Что-то шло нее так. Проверьте путь к файлу и входные данные")
 
+import random
+
+# Генерируем список из 10000 случайных чисел от 0 до 9999
+numbers = [random.randint(0, 99) for _ in range(100)]
+
+# Преобразуем список чисел в строку, разделяя числа пробелами
+numbers_str = ' '.join(map(str, numbers))
+
+print(numbers_str)
 
 
 # def insertion_sort(arr):
