@@ -54,80 +54,90 @@ int pop(Stack *s) {
     free(temp);
     return value;
 }
+// Функция для получения вершины стека без удаления
+int peek(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Ошибка: Стек пуст.\n");
+        exit(EXIT_FAILURE);
+    }
+    return s->top->data;
+}
 
-// Функция для разделения массива на две части относительно опорного элемента
-int partition(int arr[], int low, int high) {
-    int pivot = arr[high]; // Опорный элемент
+int partition(Stack *stack, int low, int high) {
+    int pivot = pop(stack); // Получаем опорный элемент из вершины стека
     int i = low - 1; // Индекс меньшего элемента
 
+    // Проходим по диапазону и переносим элементы, меньшие или равные опорному, влево
     for (int j = low; j < high; j++) {
-        if (arr[j] <= pivot) {
+        int current = pop(stack);
+        if (current <= pivot) {
             i++;
-            int temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
+            push(stack, current);
         }
     }
 
-    int temp = arr[i + 1];
-    arr[i + 1] = arr[high];
-    arr[high] = temp;
-
+    // Помещаем опорный элемент в его окончательную позицию
+    push(stack, pop(stack)); // Перемещаем найденный pivot в конец массива
+    push(stack, pivot); // Возвращаем pivot в стек
     return i + 1;
 }
 
 // Функция быстрой сортировки с использованием стека
-void quickSort(int arr[], int low, int high) {
-    Stack stack;
-    initializeStack(&stack);
-    push(&stack, low);
-    push(&stack, high);
+void quickSort(Stack *stack, int low, int high) {
+    push(stack, low);
+    push(stack, high);
 
-    while (!isEmpty(&stack)) {
-        high = pop(&stack);
-        low = pop(&stack);
+    while (!isEmpty(stack)) {
+        high = pop(stack);
+        low = pop(stack);
 
         if (high - low > 10) {
-            int pivotIndex = partition(arr, low, high);
+            int pivotIndex = partition(stack, low, high);
             if (pivotIndex - 1 > low) {
-                push(&stack, low);
-                push(&stack, pivotIndex - 1);
+                push(stack, low);
+                push(stack, pivotIndex - 1);
             }
             if (pivotIndex + 1 < high) {
-                push(&stack, pivotIndex + 1);
-                push(&stack, high);
+                push(stack, pivotIndex + 1);
+                push(stack, high);
             }
         } else {
-            // Если размер подмассива меньше 10, используем сортировку вставками
+            // Если размер кусочка данных меньше 10, используем сортировку вставками
             for (int i = low + 1; i <= high; i++) {
-                int key = arr[i];
+                int key = pop(stack);
                 int j = i - 1;
-                while (j >= low && arr[j] > key) {
-                    arr[j + 1] = arr[j];
+                while (j >= low && peek(stack) > key) {
+                    push(stack, pop(stack));
                     j--;
                 }
-                arr[j + 1] = key;
+                push(stack, key);
             }
         }
     }
 }
 
-// Пример использования
 int main() {
+    Stack stack;
+    initializeStack(&stack);
+
+    // Создаем исходные данные
     int arr[] = {9, 4, 2, 7, 5, 1, 8, 3, 6, 0};
     int n = sizeof(arr) / sizeof(arr[0]);
 
-    printf("Исходный массив:\n");
+    printf("Исходные данные:\n");
     for (int i = 0; i < n; i++) {
         printf("%d ", arr[i]);
+        push(&stack, arr[i]); // Добавляем элементы массива в стек
     }
     printf("\n");
 
-    quickSort(arr, 0, n - 1);
+    // Сортируем данные в стеке
+    quickSort(&stack, 0, n - 1);
 
-    printf("Отсортированный массив:\n");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
+    // Выводим отсортированные данные из стека
+    printf("Отсортированные данные:\n");
+    while (!isEmpty(&stack)) {
+        printf("%d ", pop(&stack));
     }
     printf("\n");
 
