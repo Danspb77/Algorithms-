@@ -2,39 +2,39 @@
 import math
 
 
-def heapify(arr, n, i):
-    largest = i  # Инициализация самого большого элемента как корня
-    l = 2 * i + 1  # left = 2*i + 1
-    r = 2 * i + 2  # right = 2*i + 2
+# def heapify(arr, n, i):
+#     largest = i  # Инициализация самого большого элемента как корня
+#     l = 2 * i + 1  # left = 2*i + 1
+#     r = 2 * i + 2  # right = 2*i + 2
 
-    # Проверяем, существует ли левый дочерний элемент, больший корня
-    if l < n and arr[l] > arr[largest]:
-        largest = l
+#     # Проверяем, существует ли левый дочерний элемент, больший корня
+#     if l < n and arr[l] > arr[largest]:
+#         largest = l
 
-    # Проверяем, существует ли правый дочерний элемент, больший корня
-    if r < n and arr[r] > arr[largest]:
-        largest = r
+#     # Проверяем, существует ли правый дочерний элемент, больший корня
+#     if r < n and arr[r] > arr[largest]:
+#         largest = r
 
-    # Заменяем корень, если нужно
-    if largest != i:
-        arr[i], arr[largest] = arr[largest], arr[i]  # Свап
-        # Применяем heapify к корню
-        heapify(arr, n, largest)
+#     # Заменяем корень, если нужно
+#     if largest != i:
+#         arr[i], arr[largest] = arr[largest], arr[i]  # Свап
+#         # Применяем heapify к корню
+#         heapify(arr, n, largest)
 
-# Основная функция для сортировки массива заданного размера
+# # Основная функция для сортировки массива заданного размера
 
 
-def heapSort(arr):
-    n = len(arr)
+# def heapSort(arr):
+#     n = len(arr)
 
-    # Построение max-heap
-    for i in range(n // 2 - 1, -1, -1):
-        heapify(arr, n, i)
+#     # Построение max-heap
+#     for i in range(n // 2 - 1, -1, -1):
+#         heapify(arr, n, i)
 
-    # Один за другим извлекаем элементы
-    for i in range(n - 1, 0, -1):
-        arr[i], arr[0] = arr[0], arr[i]  # Свап корня с последним элементом
-        heapify(arr, i, 0)
+#     # Один за другим извлекаем элементы
+#     for i in range(n - 1, 0, -1):
+#         arr[i], arr[0] = arr[0], arr[i]  # Свап корня с последним элементом
+#         heapify(arr, i, 0)
 
 
 # # Управляющий код для тестирования
@@ -76,7 +76,7 @@ def introsort_helper(arr, low, high, max_depth):
     if max_depth == 0:
         heapsort(arr, low, high)
         return
-    print(arr)
+    
     # иначе используем quicksort для разделения массива и сортировки каждой части рекурсивно
     pivot_index = partition(arr, low, high)
     introsort_helper(arr, low, pivot_index - 1, max_depth - 1)
@@ -89,12 +89,12 @@ def partition(arr, low, high):
     pivot = arr[high]
     i = low - 1
 
-    # проход по массиву, перемещение элементов меньших чем опорный на левую сторону
+    # проход по массиву, перемещение элементов меньших, чем опорный на левую сторону
     for j in range(low, high):
         if arr[j] <= pivot:
             i += 1
             arr[i], arr[j] = arr[j], arr[i]
-            # print(f'partition sort: i={i}, j={j}, pivot={pivot}, arr={arr}')
+            
 
     # перемещение опорного элемента на правильную позицию
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
@@ -141,22 +141,23 @@ def heapify_helper(arr, low, high, i):
 # Пример использования:
 
 try:
-    with open('./file1.txt', "r") as file:
+    with open('./file.txt', "r") as file:
         arr = [int(num.strip(',')) for num in file.read().split()]
+        print(f"Unsorted array: {arr}")
         introsort(arr)
         print("Sorted array:", arr)
 except:
-    print("Что-то шло нее так. Проверьте путь к файлу и входные данные")
+    print("Что-то пошло не так. Проверьте путь к файлу и входные данные")
 
-import random
+# import random
 
-# Генерируем список из 10000 случайных чисел от 0 до 9999
-numbers = [random.randint(0, 99) for _ in range(100)]
+# # Генерируем список из 10000 случайных чисел от 0 до 9999
+# numbers = [random.randint(0, 99) for _ in range(100)]
 
-# Преобразуем список чисел в строку, разделяя числа пробелами
-numbers_str = ' '.join(map(str, numbers))
+# # Преобразуем список чисел в строку, разделяя числа пробелами
+# numbers_str = ' '.join(map(str, numbers))
 
-print(numbers_str)
+# print(numbers_str)
 
 
 # def insertion_sort(arr):
