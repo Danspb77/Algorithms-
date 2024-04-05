@@ -58,49 +58,36 @@ void swap(int* a, int* b) {
     *a = *b;
     *b = temp;
 }
+// Функция для разделения списка на две части относительно опорного элемента
+struct Node* partition(struct Node* head, struct Node* tail) {
+    if (head == NULL || tail == NULL)
+        return NULL;
 
-// Вспомогательная функция для разделения массива на две части относительно опорного элемента
-int partition(int arr[], int low, int high) {
-    int pivot = arr[high];
-    int i = low - 1;
-    for (int j = low; j < high; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            swap(&arr[i], &arr[j]);
+    int pivot = tail->data;
+    struct Node* i = head->prev;
+
+    for (struct Node* j = head; j != tail; j = j->next) {
+        if (j->data < pivot) {
+            i = (i == NULL) ? head : i->next;
+            swap(&(i->data), &(j->data));
         }
     }
-    swap(&arr[i + 1], &arr[high]);
-    return i + 1;
+    i = (i == NULL) ? head : i->next;
+    swap(&(i->data), &(tail->data));
+    return i;
 }
 
-// Функция для сортировки массива методом интроспективной сортировки
-void introspectiveSort(int arr[], int low, int high, int depth_limit) {
-    if (low < high) {
-        if (depth_limit == 0) {
-            // Если достигнут предел глубины, используем сортировку вставками
-            // (для маленьких подмассивов)
-            // Можно также использовать любой другой алгоритм сортировки
-            // для маленьких подмассивов
-            // Например, сортировку пузырьком или сортировку выбором
-            for (int i = low + 1; i <= high; i++) {
-                int key = arr[i];
-                int j = i - 1;
-                while (j >= low && arr[j] > key) {
-                    arr[j + 1] = arr[j];
-                    j--;
-                }
-                arr[j + 1] = key;
-            }
-        } else {
-            int pivot = partition(arr, low, high);
-            introspectiveSort(arr, low, pivot - 1, depth_limit - 1);
-            introspectiveSort(arr, pivot + 1, high, depth_limit - 1);
-        }
+// Функция для сортировки списка методом интроспективной сортировки
+void introspectiveSortList(struct Node* head, struct Node* tail, int depth_limit) {
+    if (head != NULL && tail != NULL && head != tail && depth_limit > 0) {
+        struct Node* pivot = partition(head, tail);
+        introspectiveSortList(head, pivot->prev, depth_limit - 1);
+        introspectiveSortList(pivot->next, tail, depth_limit - 1);
     }
 }
 
 int main() {
-    // Пример использования интроспективной сортировки
+    // Пример использования интроспективной сортировки для списка
 
     struct Node* head = NULL;
     struct Node* tail = NULL;
@@ -118,29 +105,8 @@ int main() {
         current = current->next;
     }
 
-    // Преобразуем элементы в массив для сортировки
-    int count = 0;
-    current = head;
-    while (current != NULL) {
-        count++;
-        current = current->next;
-    }
-    int arr[count];
-    current = head;
-    for (int i = 0; i < count; i++) {
-        arr[i] = current->data;
-        current = current->next;
-    }
-
-    // Сортировка
-    introspectiveSort(arr, 0, count - 1, 2 * sizeof(int) * 8);
-
-    // Обновляем элементы списка
-    current = head;
-    for (int i = 0; i < count; i++) {
-        current->data = arr[i];
-        current = current->next;
-    }
+    // Сортировка списка
+    introspectiveSortList(head, tail, 2 * sizeof(int) * 8);
 
     printf("\nAfter sorting:\n");
     current = head;
