@@ -16,7 +16,9 @@ struct Queue {
 
 // Функция для создания нового элемента списка
 struct Node* newNode(int data) {
+    // Выделение памяти под новый узел
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    // Инициализация данных нового узла
     newNode->data = data;
     newNode->prev = NULL;
     newNode->next = NULL;
@@ -25,7 +27,9 @@ struct Node* newNode(int data) {
 
 // Функция для инициализации кольцевой очереди
 struct Queue* createQueue() {
+    // Выделение памяти под новую очередь
     struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    // Инициализация указателей на начало и конец очереди
     queue->front = NULL;
     queue->rear = NULL;
     return queue;
@@ -33,13 +37,16 @@ struct Queue* createQueue() {
 
 // Функция для добавления элемента в конец кольцевой очереди
 void enqueue(struct Queue* queue, int data) {
+    // Создание нового узла
     struct Node* new_node = newNode(data);
+    // Если очередь пустая
     if (queue->rear == NULL) {
         queue->front = new_node;
         queue->rear = new_node;
         queue->rear->next = queue->front;
         queue->front->prev = queue->rear;
     } else {
+        // Добавление узла в конец очереди
         new_node->prev = queue->rear;
         new_node->next = queue->front;
         queue->rear->next = new_node;
@@ -50,14 +57,17 @@ void enqueue(struct Queue* queue, int data) {
 
 // Функция для удаления и возврата первого элемента из кольцевой очереди
 int dequeue(struct Queue* queue) {
+    // Если очередь пустая
     if (queue->front == NULL)
-        return -1; // Очередь пуста
+        return -1; // Очередь пуста, возвращаем -1
     int data = queue->front->data;
     if (queue->front == queue->rear) {
+        // Если в очереди был один элемент
         free(queue->front);
         queue->front = NULL;
         queue->rear = NULL;
     } else {
+        // Если в очереди было больше одного элемента
         struct Node* temp = queue->front;
         queue->front = queue->front->next;
         queue->front->prev = queue->rear;
@@ -100,8 +110,9 @@ struct Node* partition(struct Node* head, struct Node* tail) {
 
 // Функция для сортировки списка методом интроспективной сортировки
 void introspectiveSort(struct Queue* queue) {
+    // Если очередь пуста или содержит только один элемент, завершаем сортировку
     if (isEmpty(queue) || queue->front->next == queue->front)
-        return; // Если очередь пуста или содержит только один элемент, завершаем сортировку
+        return;
 
     struct Node* head = queue->front;
     struct Node* tail = queue->rear;
@@ -136,6 +147,9 @@ void introspectiveSort(struct Queue* queue) {
         current->data = dequeue(rightQueue);
         current = current->next;
     }
+
+    free(leftQueue);
+    free(rightQueue);
 }
 
 // Функция для вывода содержимого кольцевой очереди
