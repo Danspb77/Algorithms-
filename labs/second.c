@@ -57,24 +57,26 @@ void enqueue(struct Queue* queue, int data) {
 
 // Функция для удаления и возврата первого элемента из кольцевой очереди
 int dequeue(struct Queue* queue) {
-    // Если очередь пустая
-    if (queue->front == NULL)
-        return -1; // Очередь пуста, возвращаем -1
-    int data = queue->front->data;
+    // Проверяем, пуста ли очередь
+    if (isEmpty(queue))
+        return -1; // Возвращаем -1, если очередь пуста
+
+    int data = queue->front->data; // Получаем данные первого элемента
+
+    // Если в очереди только один элемент
     if (queue->front == queue->rear) {
-        // Если в очереди был один элемент
-        free(queue->front);
-        queue->front = NULL;
-        queue->rear = NULL;
+        free(queue->front); // Освобождаем память, занимаемую первым элементом
+        queue->front = NULL; // Обнуляем указатель на первый элемент
+        queue->rear = NULL; // Обнуляем указатель на последний элемент
     } else {
-        // Если в очереди было больше одного элемента
-        struct Node* temp = queue->front;
-        queue->front = queue->front->next;
-        queue->front->prev = queue->rear;
-        queue->rear->next = queue->front;
-        free(temp);
+        // Если в очереди больше одного элемента
+        struct Node* temp = queue->front; // Временный указатель на первый элемент
+        queue->front = queue->front->next; // Перемещаем указатель на первый элемент на следующий элемент
+        queue->front->prev = queue->rear; // Устанавливаем указатель на предыдущий элемент первого элемента на последний элемент
+        queue->rear->next = queue->front; // Устанавливаем указатель на следующий элемент последнего элемента на первый элемент
+        free(temp); // Освобождаем память, занимаемую первым элементом
     }
-    return data;
+    return data; // Возвращаем данные удаленного элемента
 }
 
 // Функция для проверки, пуста ли кольцевая очередь
@@ -167,15 +169,20 @@ void printQueue(struct Queue* queue) {
 }
 
 int main() {
-    // Пример использования интроспективной сортировки для кольцевой очереди
-
     struct Queue* queue = createQueue();
 
-    enqueue(queue, 5);
-    enqueue(queue, 3);
-    enqueue(queue, 8);
-    enqueue(queue, 2);
-    enqueue(queue, 7);
+    FILE* file = fopen("file2.txt", "r"); // Открытие файла для чтения
+    if (file == NULL) {
+        printf("Failed to open the file.\n");
+        return -1;
+    }
+
+    int num;
+    while (fscanf(file, "%d", &num) != EOF) { // Считывание чисел из файла
+        enqueue(queue, num); // Добавление считанного числа в очередь
+    }
+
+    fclose(file); // Закрытие файла
 
     printf("Before sorting: ");
     printQueue(queue);
@@ -185,7 +192,6 @@ int main() {
     printf("After sorting: ");
     printQueue(queue);
 
-    // Очистка памяти
     while (!isEmpty(queue)) {
         dequeue(queue);
     }
