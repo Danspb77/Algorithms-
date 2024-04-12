@@ -1,192 +1,134 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Структура узла красно-черного дерева
+typedef enum { RED, BLACK } node_color;
+
 typedef struct rb_node {
-    int data;
-    struct rb_node *parent;
-    struct rb_node *left;
-    struct rb_node *right;
-    int color; // 0 - черный, 1 - красный
-} RBNode;
+    int value;
+    node_color color;
+    struct rb_node *left, *right, *parent;
+} rb_node;
 
-// Структура для красно-черного дерева
-typedef struct rb_tree {
-    RBNode *root;
-} RBTree;
-
-// Создание нового узла
-RBNode* createNode(int data);
-
-
-// Создание нового узла
-RBNode* createNode(int data) {
-    RBNode* newNode = (RBNode*)malloc(sizeof(RBNode));
-    if (newNode == NULL) {
-        printf("Ошибка: Не удалось выделить память для узла\n");
-        exit(1);
-    }
-    newNode->data = data;
-    newNode->parent = NULL;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    newNode->color = 1; // Новые узлы всегда красные
-    return newNode;
+rb_node* create_rb_node(int value) {
+    rb_node *node = malloc(sizeof(rb_node));
+    node->value = value;
+    node->color = RED;
+    node->left = node->right = node->parent = NULL;
+    return node;
 }
 
-// Вставка узла в красно-черное дерево
-void insertRBNode(RBTree *tree, int data) {
-    RBNode *newNode = createNode(data);
-    RBNode *parent = NULL;
-    RBNode *current = tree->root;
-
-    // Находим место для вставки нового узла
-    while (current != NULL) {
-        parent = current;
-        if (data < current->data) {
-            current = current->left;
-        } else {
-            current = current->right;
-        }
+void left_rotate(rb_node **root, rb_node *x) {
+    rb_node *y = x->right;
+    x->right = y->left;
+    if (y->left != NULL) {
+        y->left->parent = x;
     }
-
-    newNode->parent = parent;
-    if (parent == NULL) {
-        // Если дерево было пусто
-        tree->root = newNode;
-    } else if (data < parent->data) {
-        parent->left = newNode;
+    y->parent = x->parent;
+    if (x->parent == NULL) {
+        *root = y;
+    } else if (x == x->parent->left) {
+        x->parent->left = y;
     } else {
-        parent->right = newNode;
+        x->parent->right = y;
     }
+    y->left = x;
+    x->parent = y;
+}
 
-    // Выполняем восстановление свойств красно-черного дерева
-    // (поддержание красно-черных свойств)
-    // Доработка этой части
-    RBNode *uncle;
-    while (newNode != tree->root && newNode->parent->color == 1) {
-        if (newNode->parent == newNode->parent->parent->left) {
-            uncle = newNode->parent->parent->right;
-            if (uncle != NULL && uncle->color == 1) {
-                newNode->parent->color = 0;
-                uncle->color = 0;
-                newNode->parent->parent->color = 1;
-                newNode = newNode->parent->parent;
+void right_rotate(rb_node **root, rb_node *x) {
+    rb_node *y = x->left;
+    x->left = y->right;
+    if (y->right != NULL) {
+        y->right->parent = x;
+    }
+    y->parent = x->parent;
+    if (x->parent == NULL) {
+        *root = y;
+    } else if (x == x->parent->right) {
+        x->parent->right = y;
+    } else {
+        x->parent->left = y;
+    }
+    y->right = x;
+    x->parent = y;
+}
+
+void rb_insert_fixup(rb_node **root, rb_node *z) {
+    while (z != *root && z->parent->color == RED) {
+        if (z->parent == z->parent->parent->left) {
+            rb_node *y = z->parent->parent->right;
+            if (y && y->color == RED) {
+                z->parent->color = BLACK;
+                y->color = BLACK;
+                z->parent->parent->color = RED;
+                z = z->parent->parent;
             } else {
-                if (newNode == newNode->parent->right) {
-                    newNode = newNode->parent;
-                    rotateLeft(tree, newNode);
+                if (z == z->parent->right) {
+                    z = z->parent;
+                    left_rotate(root, z);
                 }
-                newNode->parent->color = 0;
-                newNode->parent->parent->color = 1;
-                rotateRight(tree, newNode->parent->parent);
+                z->parent->color = BLACK;
+                z->parent->parent->color = RED;
+                right_rotate(root, z->parent->parent);
             }
         } else {
-            // Симметричный случай
+            rb_node *y = z->parent->parent->left;
+            if (y && y->color == RED) {
+                z->parent->color = BLACK;
+                y->color = BLACK;
+                z->parent->parent->color = RED;
+                z = z->parent->parent;
+            } else {
+                if (z == z->parent->left) {
+                    z = z->parent;
+                    right_rotate(root, z);
+                }
+                z->parent->color = BLACK;
+                z->parent->parent->color = RED;
+                left_rotate(root, z->parent->parent);
+            }
         }
     }
-    tree->root->color = 0; // Корень всегда черный
+    (*root)->color = BLACK;
 }
 
-// Левый поворот дерева относительно заданного узла
-void rotateLeft(RBTree *tree, RBNode *node) {
-    RBNode *rightChild = node->right;
-    node->right = rightChild->left;
-    if (rightChild->left != NULL) {
-        rightChild->left->parent = node;
-    }
-    rightChild->parent = node->parent;
-    if (node->parent == NULL) {
-        tree->root = rightChild;
-    } else if (node == node->parent->left) {
-        node->parent->left = rightChild;
-    } else {
-        node->parent->right = rightChild;
-    }
-    rightChild->left = node;
-    node->parent = rightChild;
-}
-
-// Правый поворот дерева относительно заданного узла
-void rotateRight(RBTree *tree, RBNode *node) {
-    RBNode *leftChild = node->left;
-    node->left = leftChild->right;
-    if (leftChild->right != NULL) {
-        leftChild->right->parent = node;
-    }
-    leftChild->parent = node->parent;
-    if (node->parent == NULL) {
-        tree->root = leftChild;
-    } else if (node == node->parent->right) {
-        node->parent->right = leftChild;
-    } else {
-        node->parent->left = leftChild;
-    }
-    leftChild->right = node;
-    node->parent = leftChild;
-}
-
-// Прямой обход красно-черного дерева (в порядке возрастания)
-void preorderTraversal(RBNode* node) {
-    if (node == NULL) {
-        return;
-    }
-    preorderTraversal(node->left);
-    printf("%d ", node->data);
-    preorderTraversal(node->right);
-}
-
-
-// Интроспективная сортировка с использованием красно-черного дерева
-void introsort(int arr[], int n) {
-    // Создаем красно-черное дерево
-    RBTree *tree = (RBTree*)malloc(sizeof(RBTree));
-    tree->root = NULL;
-
-    // Вставляем каждый элемент массива в красно-черное дерево
-    for (int i = 0; i < n; i++) {
-        insertRBNode(tree, arr[i]);
-    }
-
-    // Производим прямой обход красно-черного дерева
-    // и записываем отсортированные значения обратно в массив
-    int i = 0;
-    void extractValues(RBNode* node, int arr[], int *i) {
-        if (node == NULL) {
-            return;
+void rb_insert(rb_node **root, rb_node *node) {
+    rb_node *y = NULL;
+    rb_node *x = *root;
+    while (x != NULL) {
+        y = x;
+        if (node->value < x->value) {
+            x = x->left;
+        } else {
+            x = x->right;
         }
-        extractValues(node->left, arr, i);
-        arr[(*i)++] = node->data;
-        extractValues(node->right, arr, i);
     }
-    extractValues(tree->root, arr, &i);
+    node->parent = y;
+    if (y == NULL) {
+        *root = node;
+    } else if (node->value < y->value) {
+        y->left = node;
+    } else {
+        y->right = node;
+    }
+    node->color = RED;
+    rb_insert_fixup(root, node);
+}
 
-    // Освобождаем память, выделенную для красно-черного дерева
-    free(tree);
+void inorder_traversal(rb_node *root) {
+    if (root != NULL) {
+        inorder_traversal(root->left);
+        printf("%d ", root->value);
+        inorder_traversal(root->right);
+    }
 }
 
 int main() {
-    int arr[] = {5, 3, 8, 2, 1, 9, 4, 7, 6};
-    int n = sizeof(arr) / sizeof(arr[0]);
-
-    printf("Исходный массив:\n");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
+    rb_node *root = NULL;
+    int values[] = {7, 3, 18, 10, 22, 8, 11, 26};
+    for (int i = 0; i < sizeof(values)/sizeof(values[0]); i++) {
+        rb_insert(&root, create_rb_node(values[i]));
     }
-    printf("\n");
-
-    RBTree *tree = (RBTree*)malloc(sizeof(RBTree));
-    tree->root = NULL;
-    for (int i = 0; i < n; i++) {
-        insertRBNode(tree, arr[i]);
-        printf("Добавлен узел %d:\n", arr[i]);
-        preorderTraversal(tree->root);
-        printf("\n");
-    }
-
-    printf("Отсортированный массив:\n");
-    preorderTraversal(tree->root);
-    printf("\n");
-
+    inorder_traversal(root);
     return 0;
 }
