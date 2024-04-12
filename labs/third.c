@@ -123,12 +123,26 @@ void inorder_traversal(rb_node *root) {
     }
 }
 
+void print_array(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
 int main() {
     rb_node *root = NULL;
     int values[] = {7, 3, 18, 10, 22, 8, 11, 26};
-    for (int i = 0; i < sizeof(values)/sizeof(values[0]); i++) {
+    int n = sizeof(values) / sizeof(values[0]);
+
+    printf("Исходный массив:\n");
+    print_array(values, n);
+
+    for (int i = 0; i < n; i++) {
         rb_insert(&root, create_rb_node(values[i]));
     }
+
+    printf("Отсортированный массив:\n");
     inorder_traversal(root);
     return 0;
 }
