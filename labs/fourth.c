@@ -1,7 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 
+// Функция для проверки, является ли строка числом
+bool is_number(const char *str) {
+    while (*str) {
+        if (!isdigit(*str) && *str != '.' && *str != '-') {
+            return false;
+        }
+        str++;
+    }
+    return true;
+}
 // Функция для рекурсивного вычисления полиномов Лежандра
 double legendre(int degree, double x) {
     if (degree == 0)
@@ -75,19 +86,43 @@ void predict(double *x, double *coefficients, int degree, double *predicted_valu
     }
 }
 
+
 int main() {
     int degree, n, m;
-    // Ввод степени полинома Лежандра и количества точек данных
+    char input[100]; // Буфер для ввода
+
+    // Ввод степени полинома Лежандра
     printf("Введите степень полинома Лежандра: ");
-    scanf("%d", &degree);
+    while (fgets(input, sizeof(input), stdin)) {
+        if (sscanf(input, "%d", &degree) == 1) {
+            break; // Если ввод успешный, выходим из цикла
+        }
+        printf("Ошибка: Пожалуйста, введите целое число для степени полинома Лежандра: ");
+    }
+
+    // Ввод количества точек данных
     printf("Введите количество точек данных: ");
-    scanf("%d", &n);
+    while (fgets(input, sizeof(input), stdin)) {
+        if (sscanf(input, "%d", &n) == 1) {
+            break; // Если ввод успешный, выходим из цикла
+        }
+        printf("Ошибка: Пожалуйста, введите целое число для количества точек данных: ");
+    }
 
     // Ввод исходных точек данных
     printf("Введите точки данных в формате 'x y':\n");
     double data[n][2];
     for (int i = 0; i < n; i++) {
-        scanf("%lf %lf", &data[i][0], &data[i][1]);
+        double x, y;
+        printf("Точка %d: ", i + 1);
+        while (fgets(input, sizeof(input), stdin)) {
+            if (sscanf(input, "%lf %lf", &x, &y) == 2) {
+                data[i][0] = x;
+                data[i][1] = y;
+                break; // Если ввод успешный, выходим из цикла
+            }
+            printf("Ошибка: Пожалуйста, введите два числа в формате 'x y' для точки %d: ", i + 1);
+        }
     }
 
     // Разделение входных и выходных данных
@@ -110,11 +145,23 @@ int main() {
 
     // Ввод количества новых входных данных и новых данных
     printf("Введите количество новых входных данных: ");
-    scanf("%d", &m);
+    while (fgets(input, sizeof(input), stdin)) {
+        if (sscanf(input, "%d", &m) == 1) {
+            break; // Если ввод успешный, выходим из цикла
+        }
+        printf("Ошибка: Пожалуйста, введите целое число для количества новых входных данных: ");
+    }
+
     printf("Введите новые входные данные:\n");
     double new_x[m];
     for (int i = 0; i < m; i++) {
-        scanf("%lf", &new_x[i]);
+        printf("Новая точка %d: ", i + 1);
+        while (fgets(input, sizeof(input), stdin)) {
+            if (sscanf(input, "%lf", &new_x[i]) == 1) {
+                break; // Если ввод успешный, выходим из цикла
+            }
+            printf("Ошибка: Пожалуйста, введите число для новой точки %d: ", i + 1);
+        }
     }
 
     // Прогнозирование значений для новых входных данных
