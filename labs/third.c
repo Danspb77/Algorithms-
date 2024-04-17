@@ -157,12 +157,13 @@ void rb_insert(rb_node **root, rb_node *node) {
 
 // Функция для прямого обхода красно-черного дерева (в порядке возрастания)
 void inorder_traversal(rb_node *root) {
-    if (root != NULL) {
-        inorder_traversal(root->left);
-        printf("%d ", root->value);
-        inorder_traversal(root->right);
+    if (root != NULL) {                // Проверяем, существует ли узел
+        inorder_traversal(root->left); // Рекурсивно обходим левое поддерево
+        printf("%d ", root->value);    // Выводим значение текущего узла
+        inorder_traversal(root->right);// Рекурсивно обходим правое поддерево
     }
 }
+
 
 // Функция для печати массива
 void print_array(int arr[], int n) {
@@ -206,22 +207,3 @@ int main() {
 }
 
 
-
-// // Функция main
-// int main() {
-//     rb_node *root = NULL;   // Корень красно-черного дерева
-//     int values[] = {7, 3, 18, 10, 22, 8, 11, 26}; // Исходный массив значений
-//     int n = sizeof(values) / sizeof(values[0]);  // Размер массива
-
-//     printf("Исходный массив:\n");
-//     print_array(values, n); // Вывод исходного массива
-
-//     // Вставка каждого элемента массива в красно-черное дерево
-//     for (int i = 0; i < n; i++) {
-//         rb_insert(&root, create_rb_node(values[i]));
-//     }
-
-//     printf("Отсортированный массив:\n");
-//     inorder_traversal(root); // Прямой обход красно-черного дерева (в порядке возрастания)
-//     return 0;
-// }
