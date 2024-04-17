@@ -2,18 +2,19 @@
 #include <stdlib.h>
 #include <math.h>
 
+// Функция для рекурсивного вычисления полиномов Лежандра
 double legendre(int degree, double x) {
-    // Рекурсивное вычисление полиномов Лежандра
     if (degree == 0)
-        return 1.0;
+        return 1.0; // Базовый случай: P_0(x) = 1
     else if (degree == 1)
-        return x;
+        return x; // Базовый случай: P_1(x) = x
     else
+        // Рекурсивное выражение для P_n(x)
         return ((2 * degree - 1) * x * legendre(degree - 1, x) - (degree - 1) * legendre(degree - 2, x)) / degree;
 }
 
+// Функция для вычисления коэффициентов полинома методом наименьших квадратов
 void least_squares_prediction(double *x, double *y, int n, int degree, double *coefficients) {
-    // Вычисление коэффициентов полинома методом наименьших квадратов
     double design_matrix[n][degree + 1];
 
     // Заполнение матрицы дизайна полиномами Лежандра
@@ -23,7 +24,7 @@ void least_squares_prediction(double *x, double *y, int n, int degree, double *c
         }
     }
 
-    // Вычисление коэффициентов
+    // Вычисление транспонированной матрицы дизайна
     double transpose_design[degree + 1][n];
     for (int i = 0; i <= degree; i++) {
         for (int j = 0; j < n; j++) {
@@ -31,6 +32,7 @@ void least_squares_prediction(double *x, double *y, int n, int degree, double *c
         }
     }
 
+    // Вычисление произведения транспонированной матрицы на исходную матрицу
     double temp[degree + 1][degree + 1];
     for (int i = 0; i <= degree; i++) {
         for (int j = 0; j <= degree; j++) {
@@ -41,6 +43,7 @@ void least_squares_prediction(double *x, double *y, int n, int degree, double *c
         }
     }
 
+    // Вычисление правой части системы линейных уравнений
     double rhs[degree + 1];
     for (int i = 0; i <= degree; i++) {
         rhs[i] = 0;
@@ -49,7 +52,7 @@ void least_squares_prediction(double *x, double *y, int n, int degree, double *c
         }
     }
 
-    // Решение системы линейных уравнений
+    // Решение системы линейных уравнений для получения коэффициентов полинома
     for (int i = 0; i <= degree; i++) {
         for (int j = 0; j <= degree; j++) {
             coefficients[i] = 0;
@@ -60,10 +63,12 @@ void least_squares_prediction(double *x, double *y, int n, int degree, double *c
     }
 }
 
+// Функция для прогнозирования значений для новых входных данных
 void predict(double *x, double *coefficients, int degree, double *predicted_values, int m) {
-    // Прогнозирование значений для новых входных данных
     for (int i = 0; i < m; i++) {
+        // Инициализация прогнозируемого значения
         predicted_values[i] = 0;
+        // Вычисление значения полинома для каждой новой точки данных
         for (int j = 0; j <= degree; j++) {
             predicted_values[i] += coefficients[j] * legendre(j, x[i]);
         }
@@ -72,10 +77,13 @@ void predict(double *x, double *coefficients, int degree, double *predicted_valu
 
 int main() {
     int degree, n, m;
+    // Ввод степени полинома Лежандра и количества точек данных
     printf("Введите степень полинома Лежандра: ");
     scanf("%d", &degree);
     printf("Введите количество точек данных: ");
     scanf("%d", &n);
+
+    // Ввод исходных точек данных
     printf("Введите точки данных в формате 'x y':\n");
     double data[n][2];
     for (int i = 0; i < n; i++) {
@@ -100,6 +108,7 @@ int main() {
     }
     printf("\n");
 
+    // Ввод количества новых входных данных и новых данных
     printf("Введите количество новых входных данных: ");
     scanf("%d", &m);
     printf("Введите новые входные данные:\n");
@@ -112,7 +121,7 @@ int main() {
     double predicted_values[m];
     predict(new_x, coefficients, degree, predicted_values, m);
 
-    // Вывод результатов
+    // Вывод результатов прогнозирования
     printf("Прогнозируемые значения для новых входных данных:\n");
     for (int i = 0; i < m; i++) {
         printf("x = %.6f -> y = %.6f\n", new_x[i], predicted_values[i]);
