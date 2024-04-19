@@ -16,7 +16,7 @@ def least_squares_prediction(x, y, degree):
 
     # Подготовка матрицы дизайна, используя полиномы Лежандра
     design_matrix = np.array([eval_legendre(i, x) for i in range(degree + 1)]).T
-    print(design_matrix)
+
     # Решение уравнения наименьших квадратов для получения коэффициентов
     coefficients = np.linalg.lstsq(design_matrix, y, rcond=None)[0]
 
@@ -38,23 +38,20 @@ def predict(x, coefficients):
     
     return predicted_values
 
-# Пример использования:
+# Чтение данных из файла
+file_name = "file4.txt"
+with open(file_name, 'r') as file:
+    lines = file.readlines()
 
-# Ввод данных пользователем
-degree = int(input("Введите степень полинома Лежандра: "))
-n = int(input("Введите количество точек данных: "))
-print("Введите точки данных в формате 'x y':")
-data = []
-for i in range(n):
-    point = tuple(map(float, input().split()))
-    data.append(point)
-data = np.array(data)
+# Преобразование данных в массив NumPy
+data = np.array([list(map(float, line.strip().split())) for line in lines])
 
 # Разделение входных и выходных данных
 x = data[:, 0]
 y = data[:, 1]
 
 # Прогнозирование методом наименьших квадратов
+degree = int(input("Введите степень полинома Лежандра: "))
 coefficients = least_squares_prediction(x, y, degree)
 
 # Вывод коэффициентов полинома
