@@ -80,7 +80,7 @@ void predict(double *x, double *coefficients, int degree, double *predicted_valu
 
 int main() {
     int degree;
-    printf("Введите степень полинома: ");
+    printf("Введите степень полинома Лежандра: ");
     scanf("%d", &degree);
 
     FILE *file = fopen("file4.txt", "r");  // Открываем файл для чтения
@@ -100,11 +100,11 @@ int main() {
     double coefficients[degree + 1];
     least_squares_prediction(x, y, n, degree, coefficients);  // Вычисляем коэффициенты полинома
 
-    printf("Коэффициенты полинома:\n");
+    printf("Коэффициенты полинома:[");
     for (int i = 0; i <= degree; i++) {
         printf("%.6f ", coefficients[i]);  // Выводим коэффициенты полинома
     }
-    printf("\n");
+    printf("]\n");
 
     int m = 10;  // Количество новых входных данных
     double new_x[m];

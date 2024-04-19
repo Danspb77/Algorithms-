@@ -64,4 +64,4 @@ predicted_values = predict(new_x, coefficients)
 # Вывод результатов
 print("Прогнозируемые значения для новых входных данных:")
 for i in range(len(new_x)):
-    print("x =", new_x[i], " ->  y =", predicted_values[i])
+    print("x =", new_x[i].round(3), " ->  y =", predicted_values[i].round(3))
