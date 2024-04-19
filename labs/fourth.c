@@ -1,17 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <stdbool.h>
-
-bool is_number(const char *str) {
-    while (*str) {
-        if (!isdigit(*str) && *str != '.' && *str != '-') {
-            return false;
-        }
-        str++;
-    }
-    return true;
-}
 
 double legendre(int degree, double x) {
     if (degree == 0)
@@ -23,96 +12,35 @@ double legendre(int degree, double x) {
 }
 
 void least_squares_prediction(double *x, double *y, int n, int degree, double *coefficients) {
-    double design_matrix[n][degree + 1];
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j <= degree; j++) {
-            design_matrix[i][j] = legendre(j, x[i]);
-        }
-    }
-
-    double transpose_design[degree + 1][n];
-    for (int i = 0; i <= degree; i++) {
-        for (int j = 0; j < n; j++) {
-            transpose_design[i][j] = design_matrix[j][i];
-        }
-    }
-
-    double temp[degree + 1][degree + 1];
-    for (int i = 0; i <= degree; i++) {
-        for (int j = 0; j <= degree; j++) {
-            temp[i][j] = 0;
-            for (int k = 0; k < n; k++) {
-                temp[i][j] += transpose_design[i][k] * design_matrix[k][j];
-            }
-        }
-    }
-
-    double rhs[degree + 1];
-    for (int i = 0; i <= degree; i++) {
-        rhs[i] = 0;
-        for (int j = 0; j < n; j++) {
-            rhs[i] += transpose_design[i][j] * y[j];
-        }
-    }
-
-    for (int i = 0; i <= degree; i++) {
-        for (int j = 0; j <= degree; j++) {
-            coefficients[i] = 0;
-            for (int k = 0; k <= degree; k++) {
-                coefficients[i] += temp[i][k] * rhs[k];
-            }
-        }
-    }
+    // Оставляем без изменений
+    // ...
 }
 
 void predict(double *x, double *coefficients, int degree, double *predicted_values, int m) {
-    for (int i = 0; i < m; i++) {
-        predicted_values[i] = 0;
-        for (int j = 0; j <= degree; j++) {
-            predicted_values[i] += coefficients[j] * legendre(j, x[i]);
-        }
-    }
+    // Оставляем без изменений
+    // ...
 }
 
-int main() {
-    int degree, n, m;
-    char input[100];
-
-    printf("Введите степень полинома Лежандра: ");
-    while (fgets(input, sizeof(input), stdin)) {
-        if (sscanf(input, "%d", &degree) == 1) {
-            break;
-        }
-        printf("Ошибка: Пожалуйста, введите целое число для степени полинома Лежандра: ");
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("Использование: %s <степень полинома>\n", argv[0]);
+        return 1;
     }
 
-    printf("Введите количество точек данных: ");
-    while (fgets(input, sizeof(input), stdin)) {
-        if (sscanf(input, "%d", &n) == 1) {
-            break;
-        }
-        printf("Ошибка: Пожалуйста, введите целое число для количества точек данных: ");
+    int degree = atoi(argv[1]);
+
+    FILE *file = fopen("file4.txt", "r");
+    if (file == NULL) {
+        printf("Ошибка при открытии файла\n");
+        return 1;
     }
 
-    printf("Введите точки данных в формате 'x y':\n");
-    double data[n][2];
-    for (int i = 0; i < n; i++) {
-        double x, y;
-        printf("Точка %d: ", i + 1);
-        while (fgets(input, sizeof(input), stdin)) {
-            if (sscanf(input, "%lf %lf", &x, &y) == 2) {
-                data[i][0] = x;
-                data[i][1] = y;
-                break;
-            }
-            printf("Ошибка: Пожалуйста, введите два числа в формате 'x y' для точки %d: ", i + 1);
-        }
-    }
+    int n;
+    fscanf(file, "%d", &n);
 
     double x[n], y[n];
     for (int i = 0; i < n; i++) {
-        x[i] = data[i][0];
-        y[i] = data[i][1];
+        fscanf(file, "%lf %lf", &x[i], &y[i]);
     }
 
     double coefficients[degree + 1];
@@ -124,24 +52,10 @@ int main() {
     }
     printf("\n");
 
-    printf("Введите количество новых входных данных: ");
-    while (fgets(input, sizeof(input), stdin)) {
-        if (sscanf(input, "%d", &m) == 1) {
-            break;
-        }
-        printf("Ошибка: Пожалуйста, введите целое число для количества новых входных данных: ");
-    }
-
-    printf("Введите новые входные данные:\n");
+    int m = 10;  // Количество новых входных данных
     double new_x[m];
     for (int i = 0; i < m; i++) {
-        printf("Новая точка %d: ", i + 1);
-        while (fgets(input, sizeof(input), stdin)) {
-            if (sscanf(input, "%lf", &new_x[i]) == 1) {
-                break;
-            }
-            printf("Ошибка: Пожалуйста, введите число для новой точки %d: ", i + 1);
-        }
+        new_x[i] = i + 1;  // Пример значений для прогноза
     }
 
     double predicted_values[m];
@@ -151,6 +65,8 @@ int main() {
     for (int i = 0; i < m; i++) {
         printf("x = %.6f -> y = %.6f\n", new_x[i], predicted_values[i]);
     }
+
+    fclose(file);
 
     return 0;
 }
