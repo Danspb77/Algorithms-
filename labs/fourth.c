@@ -55,7 +55,7 @@ void least_squares_prediction(double *x, double *y, int n, int degree, double *c
     double rhs[degree + 1];
     for (int i = 0; i <= degree; i++) {
         rhs[i] = 0;
-        // Вычисляем каждый элемент вектора rhs по формуле суммы произведений элементов соответствующих строки транспонированной матрицы и вектора y
+        // Вычисляем каждый элемент вектора rhs как скалярное произведение i-ой строки транспонированной матрицы дизайна и вектора y
         for (int j = 0; j < n; j++) {
             rhs[i] += transpose_design[i][j] * y[j];
         }

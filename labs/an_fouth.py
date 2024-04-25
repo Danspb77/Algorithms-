@@ -54,14 +54,15 @@ y = data[:, 1]
 degree = int(input("Введите степень полинома Лежандра: "))
 coefficients = least_squares_prediction(x, y, degree)
 
-# Вывод коэффициентов полинома
-print("Коэффициенты полинома:", coefficients)
+# Вывод коэффициентов полинома без использования экспоненциальной формы
+print("Коэффициенты полинома: [", ', '.join(['%.6f' % c for c in coefficients]),"]")
+
 
 # Прогнозирование значений для новых входных данных
-new_x = np.linspace(min(x), max(x), 10)  # Генерация новых входных данных
+new_x = np.linspace(max(x), max(x)+15, 10)  # Генерация новых входных данных
 predicted_values = predict(new_x, coefficients)
 
 # Вывод результатов
-print("Прогнозируемые значения для новых входных данных:")
+print("Прогнозируемые значения:")
 for i in range(len(new_x)):
     print("x =", new_x[i].round(6), " ->  y =", predicted_values[i].round(6))
