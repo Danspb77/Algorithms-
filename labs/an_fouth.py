@@ -59,7 +59,7 @@ print("Коэффициенты полинома: [", ', '.join(['%.6f' % c for 
 
 
 # Прогнозирование значений для новых входных данных
-new_x = np.linspace(max(x), max(x)+15, 10)  # Генерация новых входных данных
+new_x = np.linspace(max(x)+1, max(x)+15, 10)  # Генерация новых входных данных
 predicted_values = predict(new_x, coefficients)
 
 # Вывод результатов
